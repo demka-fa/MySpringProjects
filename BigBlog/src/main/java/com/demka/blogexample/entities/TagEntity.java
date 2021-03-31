@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -18,4 +19,7 @@ public class TagEntity {
 
     @Column(unique = true)
     private String slug;
+
+    @ManyToMany(mappedBy = "tags")
+    private Set<PostEntity> posts;
 }

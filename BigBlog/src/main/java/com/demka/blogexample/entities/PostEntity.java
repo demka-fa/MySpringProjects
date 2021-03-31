@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -14,22 +15,24 @@ public class PostEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String title;
-
     @Column(unique = true)
     private  String slug;
 
-    private String text;
-
     @ManyToOne
     @JoinColumn(name="author_id", nullable = false)
-    private UserEntity author;
+    private UserEntity authorPost;
 
+    @OneToMany(mappedBy = "post")
+    private List<CommentEntity> comments;
 
-    //@OneToMany(mappedBy = "user")
-    //private List<CommentEntity> comments;
+    @ManyToMany
+    @JoinTable(
+            name = "posts_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<TagEntity> tags;
 
+    private String text;
+    private String title;
     //private likes
-
-    //private Set<> tags;
 }

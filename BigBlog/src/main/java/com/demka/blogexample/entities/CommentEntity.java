@@ -15,11 +15,11 @@ public class CommentEntity {
 
     @ManyToOne
     @JoinColumn(name="author_id", nullable = false)
-    private UserEntity author;
+    private UserEntity authorComment;
+
+    @ManyToOne
+    @JoinColumn(name="post_id", nullable = false)
+    private PostEntity post;
 
     private String text;
-
-    //@ManyToOne
-    //@JoinColumn(name="user_id", nullable = false)
-    //private PostEntity post_id;
 }

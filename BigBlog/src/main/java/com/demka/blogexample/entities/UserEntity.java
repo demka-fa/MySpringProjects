@@ -23,9 +23,9 @@ public class UserEntity {
     private String password;
     private boolean isActive;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "authorPost")
     private Set<PostEntity> posts;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "authorComment")
     private Set<CommentEntity> comments;
 }
