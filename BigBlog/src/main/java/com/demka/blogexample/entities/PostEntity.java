@@ -35,7 +35,6 @@ public class PostEntity {
 
     private String text;
     private String title;
-    //private likes
 
     @ManyToMany
     @JoinTable(
