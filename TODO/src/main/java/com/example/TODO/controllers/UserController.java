@@ -11,62 +11,69 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserService itemService;
 
     @Autowired
-    public UserController(UserService userService){
-        this.userService = userService;
+    public UserController(UserService itemService) {
+        this.itemService = itemService;
     }
 
-    @PostMapping("/api/users")
-    public ResponseEntity<?> create(@RequestBody UserEntity user){
-        userService.create(user);
-        return  new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping()
+    public ResponseEntity<?> createItem(@RequestBody UserEntity item) {
+        itemService.create(item);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/users")
-    public ResponseEntity<List<UserEntity>> findAll(){
-        final List<UserEntity> clientList = userService.findAll();
-        return clientList != null && !clientList.isEmpty()
-                ? new ResponseEntity<>(clientList, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping()
+    public ResponseEntity<?> findAllItems() {
+        List<UserEntity> itemList = itemService.findAll();
+        if (itemList.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(itemList, HttpStatus.OK);
     }
 
-    @GetMapping("/api/users/{id}")
-    public ResponseEntity<Optional<UserEntity>> find(@PathVariable(name = "id") Long id){
-        final Optional<UserEntity> user = userService.find(id);
-        return user != null
-                ? new ResponseEntity<>(user, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable(name = "id") Long id) {
+        Optional<UserEntity> currentItem = itemService.find(id);
+        if (currentItem.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(currentItem.get(), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateItem(@PathVariable(name = "id") Long id, @RequestBody UserEntity newItem) {
+        Optional<UserEntity> currentItemOptional = itemService.find(id);
+        if (currentItemOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        UserEntity currentItem = currentItemOptional.get();
 
-    @PutMapping("/api/users/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id, @RequestBody UserEntity newUser) {
-        return userService.find(id).map(client -> {
-            client.setFirstName(newUser.getFirstName());
-            client.setSecondName(newUser.getSecondName());
-            client.setLastName(newUser.getLastName());
-            client.setLogin(newUser.getLogin());
-            client.setCreate_date(newUser.getCreate_date());
-            client.setBirthday(newUser.getBirthday());
-            client.setChange_date(newUser.getChange_date());
-            client.setTasks(newUser.getTasks());
-            userService.update(client);
-            return new ResponseEntity<>(client, HttpStatus.OK);
-        }).orElseThrow(() -> new IllegalArgumentException());
+        currentItem.setFirstName(newItem.getFirstName());
+        currentItem.setSecondName(newItem.getSecondName());
+        currentItem.setLastName(newItem.getLastName());
+        currentItem.setLogin(newItem.getLogin());
+        currentItem.setCreatedDate(newItem.getCreatedDate());
+        currentItem.setBirthday(newItem.getBirthday());
+        currentItem.setChangedDate(newItem.getChangedDate());
+        currentItem.setTasks(newItem.getTasks());
 
+
+        itemService.update(currentItem);
+        return new ResponseEntity<>(currentItem, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/users/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {
-        return userService.find(id).map(client -> {
-            userService.delete(client);
-            return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new IllegalArgumentException());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteItem(@PathVariable(name = "id") Long id) {
+        Optional<UserEntity> currentItemOptional = itemService.find(id);
+        if (currentItemOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        itemService.delete(currentItemOptional.get());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 }

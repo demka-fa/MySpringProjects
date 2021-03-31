@@ -11,59 +11,68 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/tasks")
 public class TaskController {
 
-    private final TaskService taskService;
+    private final TaskService itemService;
 
     @Autowired
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
+    public TaskController(TaskService itemService) {
+        this.itemService = itemService;
     }
 
-    @PostMapping("/api/tasks")
-    public ResponseEntity<?> create(@RequestBody TaskEntity task) {
-        taskService.create(task);
+    @PostMapping()
+    public ResponseEntity<?> createItem(@RequestBody TaskEntity item) {
+        itemService.create(item);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/tasks")
-    public ResponseEntity<List<TaskEntity>> findAll() {
-        final List<TaskEntity> taskList = taskService.findAll();
-        return taskList != null && !taskList.isEmpty()
-                ? new ResponseEntity<>(taskList, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping()
+    public ResponseEntity<?> findAllItems() {
+        List<TaskEntity> itemList = itemService.findAll();
+        if (itemList.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(itemList, HttpStatus.OK);
     }
 
-    @GetMapping("/api/tasks/{id}")
-    public ResponseEntity<Optional<TaskEntity>> find(@PathVariable(name = "id") Long id) {
-        final Optional<TaskEntity> task = taskService.find(id);
-        return task != null
-                ? new ResponseEntity<>(task, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable(name = "id") Long id) {
+        Optional<TaskEntity> currentItem = itemService.find(id);
+        if (currentItem.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(currentItem.get(), HttpStatus.OK);
     }
 
-    @PutMapping("/api/tasks/{id}")
-    public ResponseEntity<?> updateTask(@PathVariable(name = "id") Long id, @RequestBody TaskEntity newTask) {
-        return taskService.find(id).map(task -> {
-            task.setCreate_date(newTask.getCreate_date());
-            task.setChange_date(newTask.getChange_date());
-            task.setName(newTask.getName());
-            task.setDescription(newTask.getDescription());
-            task.setComplete_date(newTask.getComplete_date());
-            task.setCompleted(newTask.getCompleted());
-            task.setUser(newTask.getUser());
-            task.setCategories(newTask.getCategories());
-            taskService.update(task);
-            return new ResponseEntity<>(task, HttpStatus.OK);
-        }).orElseThrow(() -> new IllegalArgumentException());
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateItem(@PathVariable(name = "id") Long id, @RequestBody TaskEntity newItem) {
+        Optional<TaskEntity> currentItemOptional = itemService.find(id);
+        if (currentItemOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        TaskEntity currentItem = currentItemOptional.get();
 
+        currentItem.setCreatedDate(newItem.getCreatedDate());
+        currentItem.setChangedDate(newItem.getChangedDate());
+        currentItem.setTitle(newItem.getTitle());
+        currentItem.setDescription(newItem.getDescription());
+        currentItem.setCompletedDate(newItem.getCompletedDate());
+        currentItem.setIsReady(newItem.getIsReady());
+        currentItem.setUser(newItem.getUser());
+        currentItem.setCategories(newItem.getCategories());
+
+        itemService.update(currentItem);
+        return new ResponseEntity<>(currentItem, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/tasks/{id}")
-    public ResponseEntity<?> deleteTask(@PathVariable(name = "id") Long id) {
-        return taskService.find(id).map(task -> {
-            taskService.delete(task);
-            return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new IllegalArgumentException());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteItem(@PathVariable(name = "id") Long id) {
+        Optional<TaskEntity> currentItemOptional = itemService.find(id);
+        if (currentItemOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        itemService.delete(currentItemOptional.get());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

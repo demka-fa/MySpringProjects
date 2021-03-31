@@ -2,16 +2,18 @@ package com.example.TODO.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @Table(name = "Users")
-public class UserEntity {
+public class UserEntity extends SuperEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +23,7 @@ public class UserEntity {
     private String secondName;
     private String lastName;
     private String login;
-    private Date birthday;
-    private Date create_date;
-    private Date change_date;
+    private LocalDate birthday;
 
     @OneToMany(mappedBy = "user")
     private List<TaskEntity> tasks;

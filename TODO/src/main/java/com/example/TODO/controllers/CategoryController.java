@@ -1,6 +1,5 @@
 package com.example.TODO.controllers;
 
-
 import com.example.TODO.entities.CategoryEntity;
 import com.example.TODO.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,56 +10,66 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
+@RequestMapping("/categories")
 public class CategoryController {
 
-    private final CategoryService categoryService;
+    private final CategoryService itemService;
 
     @Autowired
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
+    public CategoryController(CategoryService itemService) {
+        this.itemService = itemService;
     }
 
-    @PostMapping("/api/categories")
-    public ResponseEntity<?> create(@RequestBody CategoryEntity category) {
-        categoryService.create(category);
+    @PostMapping()
+    public ResponseEntity<?> createItem(@RequestBody CategoryEntity item) {
+        itemService.create(item);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/categories")
-    public ResponseEntity<List<CategoryEntity>> findAll() {
-        final List<CategoryEntity> categoryList = categoryService.findAll();
-        return categoryList != null && !categoryList.isEmpty()
-                ? new ResponseEntity<>(categoryList, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping()
+    public ResponseEntity<?> findAllItems() {
+        List<CategoryEntity> itemList = itemService.findAll();
+        if (itemList.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(itemList, HttpStatus.OK);
     }
 
-    @GetMapping("/api/categories/{id}")
-    public ResponseEntity<Optional<CategoryEntity>> find(@PathVariable(name = "id") Long id) {
-        final Optional<CategoryEntity> category = categoryService.find(id);
-        return category != null
-                ? new ResponseEntity<>(category, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable(name = "id") Long id) {
+        Optional<CategoryEntity> currentItem = itemService.find(id);
+        if (currentItem.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(currentItem.get(), HttpStatus.OK);
     }
 
-    @PutMapping("/api/categories/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable(name = "id") Long id, @RequestBody CategoryEntity newCategory) {
-        return categoryService.find(id).map(category -> {
-            category.setName(newCategory.getName());
-            category.setChange_date(newCategory.getChange_date());
-            category.setCreate_date(newCategory.getCreate_date());
-            category.setTasks(newCategory.getTasks());
-            categoryService.update(category);
-            return new ResponseEntity<>(category, HttpStatus.OK);
-        }).orElseThrow(() -> new IllegalArgumentException());
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateItem(@PathVariable(name = "id") Long id, @RequestBody CategoryEntity newItem) {
+        Optional<CategoryEntity> currentItemOptional = itemService.find(id);
+        if (currentItemOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        CategoryEntity currentItem = currentItemOptional.get();
+        currentItem.setName(newItem.getName());
+        currentItem.setCreatedDate(newItem.getCreatedDate());
+        currentItem.setChangedDate(newItem.getChangedDate());
+        currentItem.setTasks(newItem.getTasks());
+
+        itemService.update(currentItem);
+        return new ResponseEntity<>(currentItem, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/categories/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable(name = "id") Long id) {
-        return categoryService.find(id).map(category -> {
-            categoryService.delete(category);
-            return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new IllegalArgumentException());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteItem(@PathVariable(name = "id") Long id) {
+        Optional<CategoryEntity> currentItemOptional = itemService.find(id);
+        if (currentItemOptional.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        itemService.delete(currentItemOptional.get());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 
