@@ -9,6 +9,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Data
+@Table(name = "tags")
 public class TagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

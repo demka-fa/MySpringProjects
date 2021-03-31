@@ -10,6 +10,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Data
+@Table(name = "posts")
 public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +36,13 @@ public class PostEntity {
     private String text;
     private String title;
     //private likes
+
+    @ManyToMany
+    @JoinTable(
+            name = "likes",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<UserEntity> likes;
+
+
 }

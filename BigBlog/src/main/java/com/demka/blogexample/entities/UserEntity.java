@@ -9,6 +9,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Data
+@Table(name = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +29,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "authorComment")
     private Set<CommentEntity> comments;
+
+    @ManyToMany(mappedBy = "likes")
+    private Set<PostEntity> likes;
 }
