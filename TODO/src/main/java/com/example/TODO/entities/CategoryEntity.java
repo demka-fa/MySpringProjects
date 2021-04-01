@@ -2,20 +2,16 @@ package com.example.TODO.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.Set;
-
-
 
 
 @Entity
 @Data
 @NoArgsConstructor
 @Table(name = "Categories")
-public class CategoryEntity extends SuperEntity{
+public class CategoryEntity extends SuperEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

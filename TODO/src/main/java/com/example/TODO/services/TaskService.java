@@ -14,27 +14,27 @@ public class TaskService {
     private final TaskRepo taskRepo;
 
     @Autowired
-    public TaskService(TaskRepo taskRepo){
+    public TaskService(TaskRepo taskRepo) {
         this.taskRepo = taskRepo;
     }
 
-    public void create(TaskEntity task){
+    public void create(TaskEntity task) {
         taskRepo.save(task);
     }
 
-    public void update(TaskEntity task){
+    public void update(TaskEntity task) {
         taskRepo.save(task);
     }
 
-    public void delete(TaskEntity task){
+    public void delete(TaskEntity task) {
         taskRepo.delete(task);
     }
 
-    public List<TaskEntity> findAll(){
+    public List<TaskEntity> findAll() {
         return taskRepo.findAll();
     }
 
-    public Optional<TaskEntity> find(Long id){
+    public Optional<TaskEntity> find(Long id) {
         return taskRepo.findById(id);
     }
 

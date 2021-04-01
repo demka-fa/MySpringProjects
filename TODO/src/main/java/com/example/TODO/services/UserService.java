@@ -14,27 +14,27 @@ public class UserService {
     private final UserRepo userRepo;
 
     @Autowired
-    public UserService(UserRepo userRepo){
+    public UserService(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
 
-    public void create(UserEntity client){
+    public void create(UserEntity client) {
         userRepo.save(client);
     }
 
-    public void update(UserEntity client){
+    public void update(UserEntity client) {
         userRepo.save(client);
     }
 
-    public void delete(UserEntity client){
+    public void delete(UserEntity client) {
         userRepo.delete(client);
     }
 
-    public List<UserEntity> findAll(){
+    public List<UserEntity> findAll() {
         return userRepo.findAll();
     }
 
-    public Optional<UserEntity> find(Long id){
+    public Optional<UserEntity> find(Long id) {
         return userRepo.findById(id);
     }
 

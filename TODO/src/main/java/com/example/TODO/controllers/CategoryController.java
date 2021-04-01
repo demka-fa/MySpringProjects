@@ -40,7 +40,7 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(name = "id") Long id) {
         Optional<CategoryEntity> currentItem = itemService.find(id);
-        if (currentItem.isEmpty()){
+        if (currentItem.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(currentItem.get(), HttpStatus.OK);
@@ -49,7 +49,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateItem(@PathVariable(name = "id") Long id, @RequestBody CategoryEntity newItem) {
         Optional<CategoryEntity> currentItemOptional = itemService.find(id);
-        if (currentItemOptional.isEmpty()){
+        if (currentItemOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         CategoryEntity currentItem = currentItemOptional.get();
@@ -65,7 +65,7 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteItem(@PathVariable(name = "id") Long id) {
         Optional<CategoryEntity> currentItemOptional = itemService.find(id);
-        if (currentItemOptional.isEmpty()){
+        if (currentItemOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         itemService.delete(currentItemOptional.get());

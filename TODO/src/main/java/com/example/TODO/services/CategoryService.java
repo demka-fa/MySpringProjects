@@ -14,27 +14,27 @@ public class CategoryService {
     private final CategoryRepo categoryRepo;
 
     @Autowired
-    public CategoryService(CategoryRepo categoryRepo){
+    public CategoryService(CategoryRepo categoryRepo) {
         this.categoryRepo = categoryRepo;
     }
 
-    public void create(CategoryEntity category){
+    public void create(CategoryEntity category) {
         categoryRepo.save(category);
     }
 
-    public void update(CategoryEntity category){
+    public void update(CategoryEntity category) {
         categoryRepo.save(category);
     }
 
-    public void delete(CategoryEntity category){
+    public void delete(CategoryEntity category) {
         categoryRepo.delete(category);
     }
 
-    public List<CategoryEntity> findAll(){
+    public List<CategoryEntity> findAll() {
         return categoryRepo.findAll();
     }
 
-    public Optional<CategoryEntity> find(Long id){
+    public Optional<CategoryEntity> find(Long id) {
         return categoryRepo.findById(id);
     }
 

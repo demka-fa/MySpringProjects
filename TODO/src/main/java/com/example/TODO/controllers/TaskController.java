@@ -39,7 +39,7 @@ public class TaskController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(name = "id") Long id) {
         Optional<TaskEntity> currentItem = itemService.find(id);
-        if (currentItem.isEmpty()){
+        if (currentItem.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(currentItem.get(), HttpStatus.OK);
@@ -48,7 +48,7 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateItem(@PathVariable(name = "id") Long id, @RequestBody TaskEntity newItem) {
         Optional<TaskEntity> currentItemOptional = itemService.find(id);
-        if (currentItemOptional.isEmpty()){
+        if (currentItemOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         TaskEntity currentItem = currentItemOptional.get();
@@ -69,7 +69,7 @@ public class TaskController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteItem(@PathVariable(name = "id") Long id) {
         Optional<TaskEntity> currentItemOptional = itemService.find(id);
-        if (currentItemOptional.isEmpty()){
+        if (currentItemOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         itemService.delete(currentItemOptional.get());

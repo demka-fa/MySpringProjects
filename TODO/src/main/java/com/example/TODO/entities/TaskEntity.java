@@ -2,10 +2,8 @@ package com.example.TODO.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -26,6 +24,6 @@ public class TaskEntity extends SuperEntity {
     private Set<CategoryEntity> categories;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 }
